@@ -34,3 +34,4 @@ Install Node.js, then run `npm install` and `npm run dev`. Visit http://localhos
 - Fetch limited Underdog offers server-side with secret keys and strict caching; never expose API keys to the browser
 
 No live API calls are made in V1. Do not use synthetic data to make betting decisions.
+NFL Prop Lab Next.js deployment setup.
