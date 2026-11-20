@@ -1,0 +1,31 @@
+name: Refresh free NFL research data
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '23 13 * * *'
+permissions:
+  contents: write
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: scripts/requirements.txt
+      - run: pip install -r scripts/requirements.txt
+      - run: python scripts/build_data.py
+        env:
+          NFL_SEASON: '2026'
+      - name: Commit public data if changed
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/data/nfl.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Update public NFL research dataset'
+            git push
+          fi
